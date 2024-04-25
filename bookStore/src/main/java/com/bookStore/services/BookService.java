@@ -28,6 +28,15 @@ public class BookService {
         return book;
     }
 
+    public Book get_book_by_id(Integer book_id){
+        Optional<Book> book = bookRepository.findById(book_id);
+        if (book.isPresent()) {
+            return
+                book.get();}
+        else
+            return new Book();
+    }
+
     /*Нужно будет написать методы для добавления/удаления книги в избранное,
      * удаления из базы книги в целом, редактирования полей книги*/
 }

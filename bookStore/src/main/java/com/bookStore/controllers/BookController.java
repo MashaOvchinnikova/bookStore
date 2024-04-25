@@ -84,5 +84,11 @@ public class BookController {
         return "redirect:/admin/all_books";
     }
 
+    @GetMapping("/book/{book_id}")
+    public ModelAndView view_book(@PathVariable Integer book_id){
+        Book book = bookService.get_book_by_id(book_id);
+        return  new ModelAndView("bookView", "book", book);
+    }
+
     /*Нужно еще добавить контроллеры для удаления и редактирования книг*/
 }
