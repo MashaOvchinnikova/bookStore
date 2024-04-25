@@ -10,7 +10,7 @@
 <body>
 <nav class="navbar navbar-expand-lg bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand text-white" href="#">Книжный магазин</a>
+        <a class="navbar-brand text-white" href="#">Библиотека с отзывами</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -31,12 +31,6 @@
                     <a class="nav-link text-white" href="/login"><span class="fas fa-sign-in-alt"></span>Вход</a>
                 </li>
             </ul>
-           <!-- <div>
-                <a class="nav-link text-white" href="/registration">Регистрация</a>
-            </div>
-            <div>
-                <a class="nav-link text-white" href="/login">Вход</a>
-            </div>-->
         </div>
     </div>
 </nav>
@@ -49,7 +43,6 @@
             <th scope="col">Автор</th>
             <th scope="col">Цена</th>
             <th scope="col">Описание</th>
-            <!--<th scope="col">Действия</th>-->
 
         </tr>
         </thead>
@@ -60,7 +53,6 @@
             <td th:text="${b.author}"></td>
             <td th:text="${b.price}"></td>
             <td th:text="${b.description}"></td>
-            <!--<td><a class="btn btn-secondary btn-sm">Оставить отзыв</a></td>-->
         </tr>
         </tbody>
     </table>
