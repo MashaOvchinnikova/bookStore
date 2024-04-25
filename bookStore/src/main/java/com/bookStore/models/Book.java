@@ -13,6 +13,7 @@ public class Book {
     private int id;
     private String author;
     private String name;
+    private BookGenre genre;
     private String price;
     private String description;
     //public String rating;
