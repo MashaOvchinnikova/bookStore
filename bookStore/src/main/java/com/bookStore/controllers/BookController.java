@@ -1,14 +1,13 @@
 package com.bookStore.controllers;
 
 import com.bookStore.models.Book;
+import com.bookStore.models.BookGenre;
 import com.bookStore.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -30,14 +29,29 @@ public class BookController {
         return "home";
     }
 
-    @GetMapping("/all_books")
-    public ModelAndView getAllBooks()
+/*    @GetMapping("/all_books")
+    public ModelAndView getBooks()
     {
         List<Book> books = bookService.getAllBooks();
-       /* ModelAndView model = new ModelAndView();
+       *//* ModelAndView model = new ModelAndView();
         model.setViewName("booksList");
-        model.addObject("books", books);*/
+        model.addObject("books", books);*//*
         return new ModelAndView("booksList", "books", books);
+    }*/
+
+    @GetMapping("/books")
+    public String getBooks(Model model, @RequestParam(defaultValue = "1") int page,
+                                 @RequestParam(defaultValue = "2") int size) {
+        Page<Book> pageBooks = bookService.getBooks(page,size);
+        List<Book> books = pageBooks.getContent();
+        int totalPages = pageBooks.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = bookService.getPageNumbers(totalPages);
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+        model.addAttribute("books", books);
+        model.addAttribute("bookPage", pageBooks);
+        return "booksList";
     }
 
     //Эндпоинты для зареганных пользователей с ролью USER
@@ -48,11 +62,19 @@ public class BookController {
     }
 
 
-    @GetMapping("/user/all_books")
-    public ModelAndView getAllBooksAuthorized()
-    {
-        List<Book> books = bookService.getAllBooks();
-        return new ModelAndView("booksListAuthorizedUser", "books", books);
+    @GetMapping("/user/books")
+    public String getBooksAuthorized(Model model, @RequestParam(defaultValue = "1") int page,
+                                           @RequestParam(defaultValue = "2") int size) {
+        Page<Book> pageBooks = bookService.getBooks(page,size);
+        List<Book> books = pageBooks.getContent();
+        int totalPages = pageBooks.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = bookService.getPageNumbers(totalPages);
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+        model.addAttribute("books", books);
+        model.addAttribute("bookPage", pageBooks);
+        return "booksListAuthorizedUser";
     }
 
     /*Логику получения из БД списка добавленных книг в избранное юзером
@@ -66,15 +88,23 @@ public class BookController {
     }
 
     //Эндпоинты для зареганных пользователей с ролью ADMIN
-    @GetMapping("/admin/all_books")
-    public ModelAndView getAllBooksAdmin()
-    {
-        List<Book> books = bookService.getAllBooks();
-        return new ModelAndView("booksListAdmin", "books", books);
+    @GetMapping("/admin/books")
+    public String getBooksAdmin(Model model, @RequestParam(defaultValue = "1") int page,
+                                      @RequestParam(defaultValue = "2") int size) {
+        Page<Book> pageBooks = bookService.getBooks(page,size);
+        List<Book> books = pageBooks.getContent();
+        int totalPages = pageBooks.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = bookService.getPageNumbers(totalPages);
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+        model.addAttribute("books", books);
+        model.addAttribute("bookPage", pageBooks);
+        return "booksListAdmin";
     }
 
     @GetMapping("/admin/add_book")
-    public String addBook()
+    public String addBook(Model model)
     {
         return "bookAddition";
     }
@@ -82,7 +112,7 @@ public class BookController {
     @PostMapping("/admin/save_book")
     public String saveBook(@ModelAttribute Book book) {
         bookService.saveBook(book);
-        return "redirect:/admin/all_books";
+        return "redirect:/admin/books";
     }
 
     @GetMapping("/book/{book_id}")
