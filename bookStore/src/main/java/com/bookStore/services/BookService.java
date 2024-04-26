@@ -34,17 +34,15 @@ public class BookService {
         return pageBooks;
     }
 
-    public List<Integer> getPageNumbers(int totalPages){
-        List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-                .boxed()
-                .collect(Collectors.toList());
-        return pageNumbers;
-    }
-
 
     public Book saveBook(Book book) {
         bookRepository.save(book);
         return book;
+    }
+
+    public void deleteBookByID(Integer book_id)
+    {
+        bookRepository.deleteById(book_id);
     }
 
     public Book get_book_by_id(Integer book_id){

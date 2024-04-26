@@ -1,7 +1,7 @@
 package com.bookStore.controllers;
 
 import com.bookStore.models.Book;
-import com.bookStore.models.BookGenre;
+import com.bookStore.services.PageNumbersHandler;
 import com.bookStore.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,8 +17,11 @@ import java.util.List;
 public class BookController {
 
     private final BookService bookService;
+
+    private final PageNumbersHandler pageNumbersHandler = new PageNumbersHandler();
     @Autowired
-    public BookController(BookService bookService) {
+    public BookController(BookService bookService)
+    {
         this.bookService = bookService;
     }
 
@@ -46,7 +49,7 @@ public class BookController {
         List<Book> books = bookPage.getContent();
         int totalPages = bookPage.getTotalPages();
         if (totalPages > 0) {
-            List<Integer> pageNumbers = bookService.getPageNumbers(totalPages);
+            List<Integer> pageNumbers = pageNumbersHandler.getPageNumbers(totalPages);
             model.addAttribute("pageNumbers", pageNumbers);
         }
         model.addAttribute("totalPages", totalPages);
@@ -70,7 +73,7 @@ public class BookController {
         List<Book> books = pageBooks.getContent();
         int totalPages = pageBooks.getTotalPages();
         if (totalPages > 0) {
-            List<Integer> pageNumbers = bookService.getPageNumbers(totalPages);
+            List<Integer> pageNumbers = pageNumbersHandler.getPageNumbers(totalPages);
             model.addAttribute("pageNumbers", pageNumbers);
         }
         model.addAttribute("totalPages", totalPages);
@@ -97,13 +100,19 @@ public class BookController {
         List<Book> books = pageBook.getContent();
         int totalPages = pageBook.getTotalPages();
         if (totalPages > 0) {
-            List<Integer> pageNumbers = bookService.getPageNumbers(totalPages);
+            List<Integer> pageNumbers = pageNumbersHandler.getPageNumbers(totalPages);
             model.addAttribute("pageNumbers", pageNumbers);
         }
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("books", books);
         model.addAttribute("bookPage", pageBook);
         return "booksListAdmin";
+    }
+
+    @RequestMapping("/admin/books/{id}")
+    public String deleteBookByIdAdmin(@PathVariable("id") int book_id){
+        bookService.deleteBookByID(book_id);
+        return "redirect:/admin/books";
     }
 
     @GetMapping("/admin/add_book")
