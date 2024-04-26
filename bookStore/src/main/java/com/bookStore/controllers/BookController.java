@@ -42,15 +42,16 @@ public class BookController {
     @GetMapping("/books")
     public String getBooks(Model model, @RequestParam(defaultValue = "1") int page,
                                  @RequestParam(defaultValue = "2") int size) {
-        Page<Book> pageBooks = bookService.getBooks(page,size);
-        List<Book> books = pageBooks.getContent();
-        int totalPages = pageBooks.getTotalPages();
+        Page<Book> bookPage = bookService.getBooks(page,size);
+        List<Book> books = bookPage.getContent();
+        int totalPages = bookPage.getTotalPages();
         if (totalPages > 0) {
             List<Integer> pageNumbers = bookService.getPageNumbers(totalPages);
             model.addAttribute("pageNumbers", pageNumbers);
         }
+        model.addAttribute("totalPages", totalPages);
         model.addAttribute("books", books);
-        model.addAttribute("bookPage", pageBooks);
+        model.addAttribute("bookPage", bookPage);
         return "booksList";
     }
 
@@ -72,6 +73,7 @@ public class BookController {
             List<Integer> pageNumbers = bookService.getPageNumbers(totalPages);
             model.addAttribute("pageNumbers", pageNumbers);
         }
+        model.addAttribute("totalPages", totalPages);
         model.addAttribute("books", books);
         model.addAttribute("bookPage", pageBooks);
         return "booksListAuthorizedUser";
@@ -91,15 +93,16 @@ public class BookController {
     @GetMapping("/admin/books")
     public String getBooksAdmin(Model model, @RequestParam(defaultValue = "1") int page,
                                       @RequestParam(defaultValue = "2") int size) {
-        Page<Book> pageBooks = bookService.getBooks(page,size);
-        List<Book> books = pageBooks.getContent();
-        int totalPages = pageBooks.getTotalPages();
+        Page<Book> pageBook = bookService.getBooks(page,size);
+        List<Book> books = pageBook.getContent();
+        int totalPages = pageBook.getTotalPages();
         if (totalPages > 0) {
             List<Integer> pageNumbers = bookService.getPageNumbers(totalPages);
             model.addAttribute("pageNumbers", pageNumbers);
         }
+        model.addAttribute("totalPages", totalPages);
         model.addAttribute("books", books);
-        model.addAttribute("bookPage", pageBooks);
+        model.addAttribute("bookPage", pageBook);
         return "booksListAdmin";
     }
 
