@@ -17,7 +17,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="/admin/all_books">Все книги</a>
+                    <a class="nav-link text-white" href="/admin/books">Все книги</a>
                 </li>
             </ul>
             <ul class="nav navbar-nav ml-auto">
@@ -49,14 +49,20 @@
             <div id="authorHelp" class="form-text">Введите автора книги</div>
         </div>
         <div class="mb-3">
-            <label class="form-label">Цена
-            <input type="text" class="form-control" name="price" aria-describedby="priceHelp">
-            </label>
-            <div id="priceHelp" class="form-text">Введите цену книги</div>
+            <label for="genre" class="form-label">Категория</label>
+            <select class="form-control selectpicker" name="genre" id="genre" aria-describedby="genreHelp">
+                <option value="">Ничего не выбрано</option>
+                <option th:each="genre : ${T(com.bookStore.models.BookGenre).values()}"
+                        th:value="${genre}"
+                        th:text="${genre.toLabel()}">Категория
+                </option>
+            </select>
+            <div id="genreHelp" class="form-text">Выберите категорию книги</div>
         </div>
         <div class="mb-3">
             <label class="form-label">Описание
-            <input type="text" class="form-control" name="description" aria-describedby="descriptionHelp">
+            <textarea class="form-control" name="description" aria-describedby="descriptionHelp" cols="100" rows="10">
+            </textarea>
             </label>
             <div id="descriptionHelp" class="form-text">Введите описание книги</div>
         </div>

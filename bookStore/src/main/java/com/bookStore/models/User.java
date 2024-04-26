@@ -9,7 +9,7 @@ import java.util.Set;
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
     private String password;
@@ -21,7 +21,7 @@ public class User {
     private Set<Role> roles;
 
     /*Вот это заготовочка для реализации добавления книг в избранное юзером
-     * подумала, что тут связь many-to-many, возможно неправа и можно как-то по-другому сделать*/
+     * подумала, что тут связь many-to-many, возможно не права и можно как-то по-другому сделать*/
     @ManyToMany
     @JoinTable(name="book_addition",
             joinColumns = @JoinColumn(name="user_id", referencedColumnName="id"),

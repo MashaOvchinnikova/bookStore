@@ -9,24 +9,25 @@ import java.util.Set;
 public class Book {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String author;
     private String name;
+
+    @Enumerated(EnumType.STRING)
     private BookGenre genre;
-    private String price;
+
+    @Column(columnDefinition="TEXT")
     private String description;
-    //public String rating;
 
     /*Вот это заготовочка для реализации добавления книг в избранное юзером
-    * подумала, что тут связь many-to-many, возможно неправа и можно как-то по-другому сделать*/
+    * подумала, что тут связь many-to-many, возможно не права и можно как-то по-другому сделать*/
     @ManyToMany(mappedBy = "addedBooks")
     private Set<User> additions;
 
-    public Book(String name, String author, String price, String description) {
+    public Book(String name, String author, String description) {
         this.author = author;
         this.name = name;
-        this.price = price;
         this.description = description;
     }
 
@@ -57,14 +58,6 @@ public class Book {
         this.name = name;
     }
 
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -80,5 +73,21 @@ public class Book {
 
     public void setAdditions(Set<User> additions) {
         this.additions = additions;
+    }
+
+    public BookGenre getGenre() {
+        return genre;
+    }
+
+    public void setGenre(BookGenre genre) {
+        this.genre = genre;
+    }
+
+    public String getFirstNChars(int n) {
+        if (this.description == null) {
+            return null;
+        }
+
+        return this.description.length() < n ? description : description.substring(0, n);
     }
 }

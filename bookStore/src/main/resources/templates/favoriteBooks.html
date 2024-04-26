@@ -20,7 +20,7 @@
                     <a class="nav-link active text-white" aria-current="page" href="/user/main">Главная</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="/user/all_books">Все книги</a>
+                    <a class="nav-link text-white" href="/user/books">Все книги</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white" href="/user/favorite_books">Мои книги</a>
@@ -47,7 +47,7 @@
             <th scope="col">Id</th>
             <th scope="col">Название</th>
             <th scope="col">Автор</th>
-            <th scope="col">Цена</th>
+            <th scope="col">Категория</th>
             <th scope="col">Описание</th>
             <th scope="col">Действия</th>
         </tr>
@@ -57,9 +57,9 @@
             <td th:text="${b.id}"></td>
             <td th:text="${b.name}"></td>
             <td th:text="${b.author}"></td>
-            <td th:text="${b.price}"></td>
-            <td th:text="${b.description}"></td>
-            <td><a class="btn btn-secondary btn-sm">Оставить отзыв</a></td>
+            <td th:text="${b.genre.toLabel()}"></td>
+            <td th:text="${b.getFirstNChars(100)} + ..."></td>
+            <td><a class="btn btn-secondary btn-sm" th:href="@{/book/{id}(id=${b.id})}">Оставить отзыв</a></td>
             <td><a class="btn btn-secondary btn-sm">Удалить из избранного</a></td>
         </tr>
         </tbody>

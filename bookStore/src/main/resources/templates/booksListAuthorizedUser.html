@@ -20,7 +20,7 @@
                     <a class="nav-link active text-white" aria-current="page" href="/user/main">Главная</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="/user/all_books">Все книги</a>
+                    <a class="nav-link text-white" href="/user/books">Все книги</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white" href="/user/favorite_books">Мои книги</a>
@@ -46,25 +46,49 @@
             <th scope="col">Id</th>
             <th scope="col">Название</th>
             <th scope="col">Автор</th>
-            <th scope="col">Цена</th>
+            <th scope="col">Категория</th>
             <th scope="col">Описание</th>
             <th scope="col">Действия</th>
-
         </tr>
         </thead>
+
         <tbody>
-        <tr th:each="b :${books}">
-            <td th:text="${b.id}"></td>
-            <td th:text="${b.name}"></td>
-            <td th:text="${b.author}"></td>
-            <td th:text="${b.price}"></td>
-            <td th:text="${b.description}"></td>
-            <td><a class="btn btn-secondary btn-sm">Оставить отзыв</a></td>
-            <td><a class="btn btn-secondary btn-sm">Добавить в избранное</a></td>
-        </tr>
+            <tr th:each="b :${books}">
+                <td th:text="${b.id}"></td>
+                <td th:text="${b.name}"></td>
+                <td th:text="${b.author}"></td>
+                <td th:text="${b.genre.toLabel()}"></td>
+                <td th:text="${b.getFirstNChars(100)} + ..."></td>
+                <td><a class="btn btn-secondary btn-sm" th:href="@{/book/{id}(id=${b.id})}">Оставить отзыв</a></td>
+                <td><a class="btn btn-secondary btn-sm">Добавить в избранное</a></td>
+            </tr>
         </tbody>
     </table>
 </div>
+
+<div th:unless="${books.size() > 0}">
+    <span>Книг пока нет!</span>
+</div>
+<!--<div th:if="${bookPage.totalPages > 0}" class="pagination"
+     th:each="pageNumber : ${pageNumbers}">
+    <a th:href="@{/books(size=${bookPage.size}, page=${pageNumber})}"
+       th:text=${pageNumber}
+       th:class="${pageNumber==bookPage.number + 1} ? active"></a>
+</div>-->
+<div class="container text-center"  th:if="${bookPage.totalPages > 0}"
+     th:each="pageNumber : ${pageNumbers}">
+    <nav aria-label="Page navigation">
+        <ul class="pagination pagination-lg">
+            <li class="page-item">
+                <a class="page-link"
+                   th:href="@{/user/books(size=${bookPage.size}, page=${pageNumber})}"
+                   th:text=${pageNumber}
+                   th:class="${pageNumber==bookPage.number + 1} ? active"></a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
