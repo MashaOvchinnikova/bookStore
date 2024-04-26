@@ -6,6 +6,9 @@ import com.bookStore.models.Role;
 import com.bookStore.repositories.UserRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 
 @Component
@@ -53,6 +57,12 @@ public class UserService implements UserDetailsService
                 .collect(Collectors.toList());
     }
 
+    public Page<User> getUsers(int page, int size){
+        Pageable paging = PageRequest.of(page - 1, size);
+        Page<User> pageUsers = userRepository.findAll(paging);
+        return pageUsers;
+    }
+
     public void addUser(User user) throws Exception
     {
         User userFromDb = userRepository.findByUsername(user.getUsername());
@@ -64,5 +74,7 @@ public class UserService implements UserDetailsService
         user.setActive(true);
         userRepository.save(user);
     }
+
+
 
 }

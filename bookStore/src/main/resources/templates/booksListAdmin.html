@@ -17,7 +17,10 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="/admin/books">Все книги</a>
+                    <a class="nav-link text-white" href="/admin/books">Книги</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/admin/users">Пользователи</a>
                 </li>
             </ul>
             <ul class="nav navbar-nav ml-auto">
@@ -59,7 +62,7 @@
             <td th:text="${b.genre.toLabel()}"></td>
             <td th:text="${b.getFirstNChars(100)} + ..."></td>
             <td><a class="btn btn-warning btn-sm">Редактировать</a></td>
-            <td><a class="btn btn-danger btn-sm">Удалить</a></td>
+            <td><a class="btn btn-danger btn-sm" th:href="@{/admin/books/{id}(id=${b.id})}">Удалить</a></td>
         </tr>
         </tbody>
     </table>
