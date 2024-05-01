@@ -17,13 +17,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active text-white" aria-current="page" href="/user/main">Главная</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="/user/books">Все книги</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="/user/favorite_books">Мои книги</a>
+                    <a class="nav-link text-white" href="/admin/books">Все книги</a>
                 </li>
             </ul>
             <ul class="nav navbar-nav ml-auto">
@@ -39,18 +33,19 @@
         </div>
     </div>
 </nav>
-<div class="container my-5 col-md-6">
-    <p th:text="${book.book.name}"> </p>
-    <p th:text="${book.book.author}"></p>
-    <p th:text="${book.book.genre.toLabel()}"></p>
-    <p th:text="${book.book.description}"></p>
-</div>
-
-<div class="container my-5 col-md-6">
-    <ul th:each="c :${book.comments}">
-        <li th:text="${c.username}"></li>
-        <li th:text="${c.comment_text}"></li>
-    </ul>
+<div class="container my-5 p-5" style="border:1px solid black;">
+    <h4 class="text-center">Добавление комментария</h4>
+    <p th:text="${book_id}"></p>
+    <form class="col-md-4 offset-md-4" th:action="@{/user/book/comment_add/} + ${book_id}"  th:method="POST">
+        <div class="mb-3">
+            <label class="form-label">Текст
+                <textarea class="form-control" name="comment_text" aria-describedby="descriptionHelp" cols="100" rows="10">
+            </textarea>
+            </label>
+            <div id="descriptionHelp" class="form-text">Введите ваш комментарий</div>
+        </div>
+        <center><button type="submit" class="btn btn-primary">Добавить</button></center>
+    </form>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

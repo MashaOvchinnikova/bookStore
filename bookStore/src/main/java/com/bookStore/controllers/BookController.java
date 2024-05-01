@@ -1,6 +1,9 @@
 package com.bookStore.controllers;
 
 import com.bookStore.models.Book;
+import com.bookStore.models.BookComment;
+import com.bookStore.models.Comment;
+import com.bookStore.services.CommentService;
 import com.bookStore.services.PageNumbersHandler;
 import com.bookStore.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +20,14 @@ import java.util.List;
 public class BookController {
 
     private final BookService bookService;
+    private final CommentService commentService;
 
     private final PageNumbersHandler pageNumbersHandler = new PageNumbersHandler();
     @Autowired
-    public BookController(BookService bookService)
+    public BookController(BookService bookService, CommentService commentService)
     {
         this.bookService = bookService;
+        this.commentService = commentService;
     }
 
     //Эндпоинты для всех пользователей
@@ -127,10 +132,12 @@ public class BookController {
         return "redirect:/admin/books";
     }
 
-    @GetMapping("/book/{book_id}")
+    @GetMapping("/user/book/{book_id}")
     public ModelAndView view_book(@PathVariable Integer book_id){
         Book book = bookService.get_book_by_id(book_id);
-        return  new ModelAndView("bookView", "book", book);
+        List<Comment> comments = commentService.get_book_comments(book_id);
+        BookComment bookNcomments = new BookComment(book, comments);
+        return  new ModelAndView("bookView", "book", bookNcomments);
     }
 
     /*Нужно еще добавить контроллеры для удаления и редактирования книг*/
