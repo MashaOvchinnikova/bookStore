@@ -17,13 +17,10 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active text-white" aria-current="page" href="/user/main">Главная</a>
+                    <a class="nav-link text-white" href="/admin/books">Книги</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="/user/books">Все книги</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="/user/favorite_books">Мои книги</a>
+                    <a class="nav-link text-white" href="/admin/users">Пользователи</a>
                 </li>
             </ul>
             <ul class="nav navbar-nav ml-auto">
@@ -44,51 +41,44 @@
         <thead>
         <tr>
             <th scope="col">Id</th>
-            <th scope="col">Название</th>
-            <th scope="col">Автор</th>
-            <th scope="col">Категория</th>
-            <th scope="col">Описание</th>
+            <th scope="col">Имя пользователя</th>
+            <th scope="col">Пароль</th>
+            <th scope="col">Роль</th>
             <th scope="col">Действия</th>
         </tr>
         </thead>
-
         <tbody>
-            <tr th:each="b :${books}">
-                <td th:text="${b.id}"></td>
-                <td th:text="${b.name}"></td>
-                <td th:text="${b.author}"></td>
-                <td th:text="${b.genre.toLabel()}"></td>
-                <td th:text="${b.getFirstNChars(100)} + ..."></td>
-                <td><a class="btn btn-secondary btn-sm" th:href="@{/user/book/{id}(id=${b.id})}">Просмотреть детали</a></td>
-                <td><a class="btn btn-secondary btn-sm">Добавить в избранное</a></td>
-            </tr>
+        <tr th:each="u :${users}">
+            <td th:text="${u.id}"></td>
+            <td th:text="${u.username}"></td>
+            <td th:text="${u.password}"></td>
+            <td th:text="${u.getRoles()}"></td>
+            <td><a class="btn btn-danger btn-sm" href="#">Удалить</a></td>
+        </tr>
         </tbody>
     </table>
 </div>
 
-<center><div class="container justify-content-center" th:unless="${books.size() > 0}">
-    <span>Книг пока нет!</span>
-</div></center>>
-
 <nav aria-label="Page navigation" th:if="${totalPages > 0}">
     <ul class="pagination justify-content-center">
-        <li class="page-item" th:if="${bookPage.hasPrevious()}">
-            <a class="page-link" th:href="@{/user/books(size=${bookPage.size}, page=${bookPage.getNumber()})}"
+        <li class="page-item" th:if="${userPage.hasPrevious()}">
+            <a class="page-link" th:href="@{/admin/users(size=${userPage.size}, page=${userPage.getNumber()})}"
                tabindex="-1">Предыдущая</a>
         </li>
         <th:block th:each="pageNumber : ${pageNumbers}">
-            <li class="page-item" th:class="${pageNumber==bookPage.getNumber() + 1} ? active">
-                <a class="page-link" th:href="@{/user/books(size=${bookPage.size}, page=${pageNumber})}"
+            <li class="page-item" th:class="${pageNumber==userPage.getNumber() + 1} ? active">
+                <a class="page-link" th:href="@{/admin/users(size=${userPage.size}, page=${pageNumber})}"
                    th:text="${pageNumber}"></a>
             </li>
         </th:block>
-        <li class="page-item" th:if="${bookPage.hasNext()}">
-            <a class="page-link" th:href="@{/user/books(size=${bookPage.size}, page=${bookPage.getNumber() +2 })}">
+        <li class="page-item" th:if="${userPage.hasNext()}">
+            <a class="page-link" th:href="@{/admin/users(size=${userPage.size}, page=${userPage.getNumber() +2 })}">
                 Следующая
             </a>
         </li>
     </ul>
 </nav>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
