@@ -116,11 +116,22 @@ public class BookController {
     }
 
     @GetMapping("/user/book/{book_id}")
-    public String view_book(Model model, @PathVariable Long book_id){
+    public String view_book(Model model,
+                            @PathVariable Long book_id,
+                            @RequestParam(defaultValue = "1") int page,
+                            @RequestParam(defaultValue = "2") int size){
         Book book = bookService.get_book_by_id(book_id);
-        List<Comment> comments = commentService.get_book_comments(book_id);
+        Page<Comment> commentPage = commentService.get_book_comments(book_id, page, size);
+        List<Comment> comments = commentPage.getContent();
         BookComment bookNcomments = new BookComment(book, comments);
+        int totalPages = commentPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = pageNumbersHandler.getPageNumbers(totalPages);
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+        model.addAttribute("totalPages", totalPages);
         model.addAttribute("book", bookNcomments);
+        model.addAttribute("commentPage", commentPage);
         return "bookView";
     }
 

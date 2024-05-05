@@ -3,6 +3,9 @@ package com.bookStore.services;
 import com.bookStore.models.Comment;
 import com.bookStore.repositories.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -26,14 +29,16 @@ public class CommentService {
         return comment;
     }
 
-    public List<Comment> get_user_comments(String username){
-        List<Comment> comments = commentRepository.findAllByUsernameContaining(username);
-        return comments;
+    public Page<Comment> get_user_comments(String username, int page, int size){
+        Pageable paging = PageRequest.of(page - 1, size);
+        Page<Comment> pageComments = commentRepository.findAllByUsernameContaining(username, paging);
+        return pageComments;
     }
 
-    public List<Comment> get_book_comments(Long book_id){
-        List<Comment> comments = commentRepository.findAllByBookContaining(book_id);
-        return comments;
+    public Page<Comment> get_book_comments(Long book_id, int page, int size){
+        Pageable paging = PageRequest.of(page - 1, size);
+        Page<Comment> pageComments = commentRepository.findAllByBookContaining(book_id, paging);
+        return pageComments;
     }
 
     public void delete_comment_by_id(Long id){

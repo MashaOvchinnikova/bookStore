@@ -4,8 +4,10 @@ import com.bookStore.models.Book;
 import com.bookStore.models.Comment;
 import com.bookStore.services.BookService;
 import com.bookStore.services.CommentService;
+import com.bookStore.services.PageNumbersHandler;
 import com.bookStore.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +22,7 @@ public class CommentController {
     private final CommentService commentService;
     private final UserService userService;
     private final BookService bookService;
+    private final PageNumbersHandler pageNumbersHandler = new PageNumbersHandler();
 
     @Autowired
     public CommentController(CommentService commentService, UserService userService, BookService bookService) {
@@ -63,10 +66,20 @@ public class CommentController {
     }
 
     @GetMapping("/user/comments")
-    public ModelAndView get_user_comments(){
+    public String get_user_comments(Model model, @RequestParam(defaultValue = "1") int page,
+                                          @RequestParam(defaultValue = "1") int size){
         String username = userService.get_current_user();
-        List<Comment> comments = commentService.get_user_comments(username);
-        return new ModelAndView("commentList", "comments",comments);
+        Page<Comment> commentPage = commentService.get_user_comments(username, page, size);
+        List<Comment> comments = commentPage.getContent();
+        int totalPages = commentPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = pageNumbersHandler.getPageNumbers(totalPages);
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("comments", comments);
+        model.addAttribute("commentPage", commentPage);
+        return "commentList";
     }
 
     @RequestMapping("/user/comments/{id}")
