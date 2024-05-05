@@ -36,7 +36,7 @@ public class UserService implements UserDetailsService
     * этот код при каждом запуске создает одну и ту же запись, и postgres выдает ошибку
     * при повторном входе из-за нескольких одинаковых записей в таблице*/
 
-   /* @PostConstruct
+/*    @PostConstruct
     private void postConstruct() {
         User admin = new User("admin", "admin");
         admin.setRoles(Collections.singleton(Role.ADMIN));
@@ -73,6 +73,26 @@ public class UserService implements UserDetailsService
         }
         user.setRoles(Collections.singleton(Role.USER));
         user.setActive(true);
+        userRepository.save(user);
+    }
+
+    public Set<Book> getFavoriteBooks(){
+        String username = get_current_user();
+        User user = userRepository.findByUsername(username);
+        return user.getBooks();
+    }
+
+    public void addBookToFavorite(Book book){
+        String username = get_current_user();
+        User user = userRepository.findByUsername(username);
+        user.addBook(book);
+        userRepository.save(user);
+    }
+
+    public void deleteBookFromFavorite(Long book_id){
+        String username = get_current_user();
+        User user = userRepository.findByUsername(username);
+        user.removeBook(book_id);
         userRepository.save(user);
     }
 

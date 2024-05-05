@@ -11,7 +11,7 @@ public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     private String author;
     private String name;
 
@@ -23,7 +23,8 @@ public class Book {
 
     /*Вот это заготовочка для реализации добавления книг в избранное юзером
     * подумала, что тут связь many-to-many, возможно не права и можно как-то по-другому сделать*/
-    @ManyToMany(mappedBy = "addedBooks")
+    @ManyToMany(fetch = FetchType.LAZY,
+            mappedBy = "addedBooks")
     private Set<User> additions;
 
     public Book(String name, String author, String description) {
@@ -35,11 +36,11 @@ public class Book {
     public Book() {
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -88,7 +89,6 @@ public class Book {
         if (this.description == null) {
             return null;
         }
-
         return this.description.length() < n ? description : description.substring(0, n);
     }
 }

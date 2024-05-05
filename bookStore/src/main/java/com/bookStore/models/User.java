@@ -23,7 +23,7 @@ public class User {
 
     /*Вот это заготовочка для реализации добавления книг в избранное юзером
      * подумала, что тут связь many-to-many, возможно не права и можно как-то по-другому сделать*/
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name="book_addition",
             joinColumns = @JoinColumn(name="user_id", referencedColumnName="id"),
             inverseJoinColumns = @JoinColumn(name="book_id", referencedColumnName="id")
@@ -87,11 +87,16 @@ public class User {
         this.roles = roles;
     }
 
-    public Set<Book> getAddedBooks() {
-        return addedBooks;
+    public void addBook(Book book){
+        this.addedBooks.add(book);
+        book.getAdditions().add(this);
     }
 
-    public void setAddedBooks(Set<Book> addedBooks) {
-        this.addedBooks = addedBooks;
+    public void removeBook(Long bookId){
+        Book book = this.addedBooks.stream().filter(b -> b.getId() == bookId).findFirst().orElse(null);
+        if (book != null) {
+            this.addedBooks.remove(book);
+            book.getAdditions().remove(this);
+        }
     }
 }
