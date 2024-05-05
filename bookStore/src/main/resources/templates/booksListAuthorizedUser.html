@@ -25,6 +25,9 @@
                 <li class="nav-item">
                     <a class="nav-link text-white" href="/user/favorite_books">Мои книги</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/user/comments">Мои отзывы</a>
+                </li>
             </ul>
             <ul class="nav navbar-nav ml-auto">
                 <li class="nav-item">
@@ -60,7 +63,7 @@
                 <td th:text="${b.genre.toLabel()}"></td>
                 <td th:text="${b.getFirstNChars(100)} + ..."></td>
                 <td><a class="btn btn-secondary btn-sm" th:href="@{/user/book/{id}(id=${b.id})}">Просмотреть детали</a></td>
-                <td><a class="btn btn-secondary btn-sm">Добавить в избранное</a></td>
+                <td><a class="btn btn-secondary btn-sm" th:href="@{/user/add_to_favorite/{id}(id=${b.id})}">Добавить в избранное</a></td>
             </tr>
         </tbody>
     </table>

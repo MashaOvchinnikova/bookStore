@@ -37,16 +37,6 @@ public class BookController {
         return "home";
     }
 
-/*    @GetMapping("/all_books")
-    public ModelAndView getBooks()
-    {
-        List<Book> books = bookService.getAllBooks();
-       *//* ModelAndView model = new ModelAndView();
-        model.setViewName("booksList");
-        model.addObject("books", books);*//*
-        return new ModelAndView("booksList", "books", books);
-    }*/
-
     @GetMapping("/books")
     public String getBooks(Model model, @RequestParam(defaultValue = "1") int page,
                                  @RequestParam(defaultValue = "2") int size) {
@@ -65,8 +55,10 @@ public class BookController {
 
     //Эндпоинты для зареганных пользователей с ролью USER
     @GetMapping("/user/main")
-    public String userMain()
+    public String userMain(Model model)
     {
+        List<Comment> latestComments = commentService.getLatestComments();
+        model.addAttribute("latestComments", latestComments);
         return "homeAuthorizedUser";
     }
 
@@ -87,15 +79,6 @@ public class BookController {
         return "booksListAuthorizedUser";
     }
 
-    /*Логику получения из БД списка добавленных книг в избранное юзером
-    нужно будет прописать в классе BookService*/
-    @GetMapping("/user/favorite_books")
-    public String getFavoriteBooksAuthorized()
-    {
-      /*  List<Book> books = bookService.getFavoriteBooks();
-        return new ModelAndView("favoriteBooks", "books", books);*/
-        return "favoriteBooks";
-    }
 
     //Эндпоинты для зареганных пользователей с ролью ADMIN
     @GetMapping("/admin/books")
@@ -115,7 +98,7 @@ public class BookController {
     }
 
     @RequestMapping("/admin/books/{id}")
-    public String deleteBookByIdAdmin(@PathVariable("id") int book_id){
+    public String deleteBookByIdAdmin(@PathVariable("id") Long book_id){
         bookService.deleteBookByID(book_id);
         return "redirect:/admin/books";
     }
@@ -133,12 +116,13 @@ public class BookController {
     }
 
     @GetMapping("/user/book/{book_id}")
-    public ModelAndView view_book(@PathVariable Integer book_id){
+    public String view_book(Model model, @PathVariable Long book_id){
         Book book = bookService.get_book_by_id(book_id);
         List<Comment> comments = commentService.get_book_comments(book_id);
         BookComment bookNcomments = new BookComment(book, comments);
-        return  new ModelAndView("bookView", "book", bookNcomments);
+        model.addAttribute("book", bookNcomments);
+        return "bookView";
     }
 
-    /*Нужно еще добавить контроллеры для удаления и редактирования книг*/
+    /*Нужно еще добавить контроллер для редактирования книг*/
 }

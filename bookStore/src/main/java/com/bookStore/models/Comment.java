@@ -8,19 +8,21 @@ import java.util.Date;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int id;
+    public Long id;
     @Column(columnDefinition="TEXT")
     public String comment_text;
 
     public String username;
-    public int book_id;
+    public Long book_id;
+    public String bookName;
 
     public Date date;
 
-    public Comment( String comment_text, String username, int book_id, Date date) {
+    public Comment( String comment_text, String username, Long book_id, String bookName, Date date) {
         this.comment_text = comment_text;
         this.username = username;
         this.book_id = book_id;
+        this.bookName = bookName;
         this.date = date;
     }
 

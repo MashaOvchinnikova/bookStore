@@ -1,10 +1,7 @@
 package com.bookStore.services;
 
-import com.bookStore.models.Book;
 import com.bookStore.models.Comment;
-import com.bookStore.repositories.BookRepository;
 import com.bookStore.repositories.CommentRepository;
-import com.bookStore.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,8 +20,8 @@ public class CommentService {
 
     //delete comment
 
-    public Comment saveComment(String comment_text, String username, Integer book_id) {
-        Comment comment = new Comment(comment_text, username, book_id, new Date());
+    public Comment saveComment(String comment_text, String username, Long book_id, String bookName) {
+        Comment comment = new Comment(comment_text, username, book_id, bookName, new Date());
         commentRepository.save(comment);
         return comment;
     }
@@ -34,12 +31,16 @@ public class CommentService {
         return comments;
     }
 
-    public List<Comment> get_book_comments(Integer book_id){
+    public List<Comment> get_book_comments(Long book_id){
         List<Comment> comments = commentRepository.findAllByBookContaining(book_id);
         return comments;
     }
 
-    public void delete_comment_by_id(int id){
+    public void delete_comment_by_id(Long id){
         commentRepository.deleteById(id);
+    }
+
+    public List<Comment> getLatestComments(){
+        return commentRepository.findFirst5ByOrderByDateDesc();
     }
 }

@@ -8,11 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Component
 public class BookService {
@@ -23,29 +19,23 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-/*    public List<Book> getAllBooks() {
-        List<Book> books = new ArrayList<>();
-        bookRepository.findAll().forEach(books::add);
-        return books;
-    }*/
     public Page<Book> getBooks(int page, int size) {
         Pageable paging = PageRequest.of(page - 1, size);
         Page<Book> pageBooks = bookRepository.findAll(paging);
         return pageBooks;
     }
 
-
     public Book saveBook(Book book) {
         bookRepository.save(book);
         return book;
     }
 
-    public void deleteBookByID(Integer book_id)
+    public void deleteBookByID(Long book_id)
     {
         bookRepository.deleteById(book_id);
     }
 
-    public Book get_book_by_id(Integer book_id){
+    public Book get_book_by_id(Long book_id){
         Optional<Book> book = bookRepository.findById(book_id);
         if (book.isPresent()) {
             return
@@ -53,6 +43,4 @@ public class BookService {
         else
             return new Book();
     }
-    /*Нужно будет написать методы для добавления/удаления книги в избранное,
-     * удаления из базы книги в целом, редактирования полей книги*/
 }

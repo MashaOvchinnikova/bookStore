@@ -1,9 +1,11 @@
 package com.bookStore.controllers;
 
+import com.bookStore.models.Book;
 import com.bookStore.models.Comment;
 import com.bookStore.services.BookService;
 import com.bookStore.services.CommentService;
 import com.bookStore.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,9 +18,10 @@ import java.util.List;
 @Controller
 public class CommentController {
     private final CommentService commentService;
-    private UserService userService;
-    private BookService bookService;
+    private final UserService userService;
+    private final BookService bookService;
 
+    @Autowired
     public CommentController(CommentService commentService, UserService userService, BookService bookService) {
         this.commentService = commentService;
         this.userService = userService;
@@ -47,14 +50,15 @@ public class CommentController {
 //    }
 
     @PostMapping("/user/book/comment_add/{id}")
-    public String add_comment(@PathVariable Integer id, String comment_text){
+    public String add_comment(@PathVariable Long id, String comment_text){
         String username = userService.get_current_user();
-        commentService.saveComment(comment_text, username, id);
-        return "redirect:/user/books";
+        String bookName = bookService.get_book_by_id(id).getName();
+        commentService.saveComment(comment_text, username, id, bookName);
+        return "redirect:/user/comments";
     }
 
-    @GetMapping("/user/book/{book_id}/comment")
-    public ModelAndView add_comm( @PathVariable Integer book_id){
+    @GetMapping("/user/book/comment/{book_id}")
+    public ModelAndView add_comm(@PathVariable Long book_id){
         return new ModelAndView("commentAdd","book_id", book_id);
     }
 
@@ -66,7 +70,7 @@ public class CommentController {
     }
 
     @RequestMapping("/user/comments/{id}")
-    public String delete_comment(@PathVariable int id){
+    public String delete_comment(@PathVariable Long id){
         commentService.delete_comment_by_id(id);
         return "redirect:/user/comments";
     }

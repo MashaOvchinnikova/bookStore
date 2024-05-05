@@ -17,7 +17,13 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="/admin/books">Все книги</a>
+                    <a class="nav-link text-white" href="/user/books">Все книги</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/user/favorite_books">Мои книги</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/user/comments">Мои отзывы</a>
                 </li>
             </ul>
             <ul class="nav navbar-nav ml-auto">
@@ -35,7 +41,7 @@
 </nav>
 <div class="container my-5 p-5" style="border:1px solid black;">
     <h4 class="text-center">Добавление комментария</h4>
-    <p th:text="${book_id}"></p>
+    <!--<p th:text="${book_id}"></p>-->
     <form class="col-md-4 offset-md-4" th:action="@{/user/book/comment_add/} + ${book_id}"  th:method="POST">
         <div class="mb-3">
             <label class="form-label">Текст
