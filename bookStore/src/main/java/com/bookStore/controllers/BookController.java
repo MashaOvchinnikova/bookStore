@@ -114,7 +114,19 @@ public class BookController {
         bookService.saveBook(book);
         return "redirect:/admin/books";
     }
+    @GetMapping("/admin/books/edit/{id}")
+    public String editBook(Model model, @PathVariable("id") Long book_id){
+        String name = bookService.get_book_by_id(book_id).getName();
+        model.addAttribute("name", name);
+        model.addAttribute("book_id", book_id);
+        return "bookEditing";
+    }
 
+    @PostMapping("/admin/save_changes/{id}")
+    public String savingChanges(@ModelAttribute Book book, @PathVariable("id") Long id){
+        bookService.updateBook(book);
+        return "redirect:/admin/books";
+    }
     @GetMapping("/user/book/{book_id}")
     public String view_book(Model model,
                             @PathVariable Long book_id,

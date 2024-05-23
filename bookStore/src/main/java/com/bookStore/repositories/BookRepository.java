@@ -11,4 +11,5 @@ import org.springframework.stereotype.Repository;
 @Transactional
 public interface BookRepository extends JpaRepository<Book, Long> {
     Page<Book> findAll(Pageable pageable);
+
 }
