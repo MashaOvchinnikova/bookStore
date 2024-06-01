@@ -61,7 +61,7 @@
             <td th:text="${b.author}"></td>
             <td th:text="${b.genre.toLabel()}"></td>
             <td th:text="${b.getFirstNChars(100)} + ..."></td>
-            <td><a class="btn btn-warning btn-sm">Редактировать</a></td>
+            <td><a class="btn btn-warning btn-sm" th:href="@{/admin/books/edit/{id}(id=${b.id})}">Редактировать</a></td>
             <td><a class="btn btn-danger btn-sm" th:href="@{/admin/books/{id}(id=${b.id})}">Удалить</a></td>
         </tr>
         </tbody>
