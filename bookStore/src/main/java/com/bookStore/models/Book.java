@@ -21,6 +21,8 @@ public class Book {
     @Column(columnDefinition="TEXT")
     private String description;
 
+    public Float rating;
+
     /*Вот это заготовочка для реализации добавления книг в избранное юзером
     * подумала, что тут связь many-to-many, возможно не права и можно как-то по-другому сделать*/
     @ManyToMany(fetch = FetchType.LAZY,

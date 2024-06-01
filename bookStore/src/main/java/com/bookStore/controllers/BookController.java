@@ -3,15 +3,12 @@ package com.bookStore.controllers;
 import com.bookStore.models.Book;
 import com.bookStore.models.BookComment;
 import com.bookStore.models.Comment;
-import com.bookStore.services.CommentService;
-import com.bookStore.services.PageNumbersHandler;
-import com.bookStore.services.BookService;
+import com.bookStore.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -21,13 +18,17 @@ public class BookController {
 
     private final BookService bookService;
     private final CommentService commentService;
+    private final UserService userService;
+    private final RatingService ratingService;
 
     private final PageNumbersHandler pageNumbersHandler = new PageNumbersHandler();
     @Autowired
-    public BookController(BookService bookService, CommentService commentService)
+    public BookController(BookService bookService, CommentService commentService, UserService userService, RatingService ratingService)
     {
         this.bookService = bookService;
         this.commentService = commentService;
+        this.userService = userService;
+        this.ratingService = ratingService;
     }
 
     //Эндпоинты для всех пользователей
@@ -114,7 +115,19 @@ public class BookController {
         bookService.saveBook(book);
         return "redirect:/admin/books";
     }
+    @GetMapping("/admin/books/edit/{id}")
+    public String editBook(Model model, @PathVariable("id") Long book_id){
+        String name = bookService.get_book_by_id(book_id).getName();
+        model.addAttribute("name", name);
+        model.addAttribute("book_id", book_id);
+        return "bookEditing";
+    }
 
+    @PostMapping("/admin/save_changes/{id}")
+    public String savingChanges(@ModelAttribute Book book, @PathVariable("id") Long id){
+        bookService.updateBook(book);
+        return "redirect:/admin/books";
+    }
     @GetMapping("/user/book/{book_id}")
     public String view_book(Model model,
                             @PathVariable Long book_id,
@@ -129,6 +142,11 @@ public class BookController {
             List<Integer> pageNumbers = pageNumbersHandler.getPageNumbers(totalPages);
             model.addAttribute("pageNumbers", pageNumbers);
         }
+        Float rating = ratingService.get_rating(book_id);
+        if (rating == -1){model.addAttribute("rating", "Рейтинг не сформирован");}
+        else{model.addAttribute("rating", rating);}
+        Integer user_rated = ratingService.UserRated(book_id, userService.get_current_user_id());
+        model.addAttribute("userRated", user_rated);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("book", bookNcomments);
         model.addAttribute("commentPage", commentPage);

@@ -50,6 +50,10 @@
     <h3>Последние Отзывы</h3>
 </div>
 
+<div class="container text-center" th:unless="${latestComments.size() > 0}">
+    <span>Отзывов пока нет!</span>
+</div>
+
 <div class="container" th:each="c :${latestComments}">
     <div class="row justify-content-around">
         <div class="card col">
