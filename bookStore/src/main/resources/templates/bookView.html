@@ -46,11 +46,26 @@
 <div class="container my-5 col-md-6">
     <div class="card">
         <h5 class="card-header" th:text="${book.book.name}"></h5>
+        <td th:switch="${userRated}">
+            <p>Ваша оценка: </p>
+            <span th:case="'-1'">
+                <form class="col-md-4 offset-md-4" th:action="@{/user/book/rate/{book_id}(book_id=${book.book.id})}" method="post">
+                <select class="form-control selectpicker" name="rate" id="rate" aria-describedby="genreHelp" >
+                <option value="">Ничего не выбрано</option>
+                <option th:each="i : ${#numbers.sequence(1, 5)}" th:value="${i}" th:text="${i}">
+                </option>
+                </select>
+                    <button type="submit" class="btn btn-primary">Оценить</button>
+                </form>
+            </span>
+            <span th:case="*" th:text="${userRated}"></span>
+        </td>
         <div class="card-body">
             <ul class="list-group list-group-flush">
                 <li class="list-group-item" th:text="${book.book.author}"></li>
                 <li class="list-group-item" th:text="${book.book.genre.toLabel()}"></li>
                 <li class="list-group-item" th:text="${book.book.description}"></li>
+                <p>Рейтинг книги: <li class="list-group-item" th:text="${rating}">Рейтинг</li></p>
             </ul>
         </div>
     </div>
