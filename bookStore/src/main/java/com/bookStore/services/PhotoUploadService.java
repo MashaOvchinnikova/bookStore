@@ -22,8 +22,8 @@ public class PhotoUploadService {
         this.s3Client = AmazonS3ClientBuilder.standard()
                 .withEndpointConfiguration(
                         new com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration(
-                                "https://nsbuisorssulbeyjeedw.supabase.co/storage/v1/s3",
-                                "us-west-1"
+                                "https://storage.yandexcloud.net",
+                                "ru-central1"
                         )
                 )
                 .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(
@@ -34,19 +34,24 @@ public class PhotoUploadService {
     public void uploadPhoto(InputStream stream, String filename, String contentType) throws IOException,
     AmazonServiceException, SdkClientException {
 
-        var file_name = generateUniqueName() + filename.split(".")[1];
+        var file_name = generateUniqueName() + "."+ filename.split("\\.")[1];
         var metadata = new ObjectMetadata();
         metadata.setContentType(contentType);
         metadata.setContentLength(stream.available());
-        s3Client.putObject("testestest", file_name, stream, metadata);
+        s3Client.putObject("lib-backet", file_name, stream, metadata);
     }
 
     public byte[] downloadPhoto(String filename) throws IOException {
-        var s3Object = s3Client.getObject("testestest", filename);
+        var s3Object = s3Client.getObject("lib-backet", filename);
         var stream = s3Object.getObjectContent();
         var content = IOUtils.toByteArray(stream);
         s3Object.close();
         return content;
+    }
+
+    public String getImageLink(String filename) throws IOException {
+        var fileLink = s3Client.getUrl("lib-backet", filename).toExternalForm();
+        return  fileLink;
     }
 
     private String generateUniqueName() {
