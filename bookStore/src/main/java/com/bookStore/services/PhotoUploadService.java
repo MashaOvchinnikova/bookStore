@@ -6,9 +6,11 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.MultipartUpload;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.util.IOUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,14 +33,15 @@ public class PhotoUploadService {
                         "")))
                 .build();
     }
-    public void uploadPhoto(InputStream stream, String filename, String contentType) throws IOException,
-    AmazonServiceException, SdkClientException {
 
+    public String uploadPhoto (InputStream stream, String filename, String contentType) throws IOException,
+    AmazonServiceException, SdkClientException {
         var file_name = generateUniqueName() + "."+ filename.split("\\.")[1];
         var metadata = new ObjectMetadata();
         metadata.setContentType(contentType);
         metadata.setContentLength(stream.available());
         s3Client.putObject("lib-backet", file_name, stream, metadata);
+        return file_name;
     }
 
     public byte[] downloadPhoto(String filename) throws IOException {
@@ -49,13 +52,25 @@ public class PhotoUploadService {
         return content;
     }
 
-    public String getImageLink(String filename) throws IOException {
-        var fileLink = s3Client.getUrl("lib-backet", filename).toExternalForm();
-        return  fileLink;
+    public String getImageLink(String filename)  {
+        String filelink="https://storage.yandexcloud.net/lib-backet/" + filename;
+        return filelink;
     }
 
     private String generateUniqueName() {
         UUID uuid = UUID.randomUUID();
         return uuid.toString();
+    }
+
+    public String getFileName(MultipartFile file){
+        var fileName = file.getOriginalFilename();
+        var fileType = file.getContentType();
+        String file_name = null;
+        try {
+            file_name = uploadPhoto(file.getInputStream(), fileName, fileType);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return file_name;
     }
 }

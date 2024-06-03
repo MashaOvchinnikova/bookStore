@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -20,15 +21,17 @@ public class BookController {
     private final CommentService commentService;
     private final UserService userService;
     private final RatingService ratingService;
-
+    private final PhotoUploadService photoUploadService;
     private final PageNumbersHandler pageNumbersHandler = new PageNumbersHandler();
     @Autowired
-    public BookController(BookService bookService, CommentService commentService, UserService userService, RatingService ratingService)
+    public BookController(BookService bookService, CommentService commentService,
+                          UserService userService, RatingService ratingService, PhotoUploadService photoUploadService)
     {
         this.bookService = bookService;
         this.commentService = commentService;
         this.userService = userService;
         this.ratingService = ratingService;
+        this.photoUploadService = photoUploadService;
     }
 
     //Эндпоинты для всех пользователей
@@ -111,7 +114,9 @@ public class BookController {
     }
 
     @PostMapping("/admin/save_book")
-    public String saveBook(@ModelAttribute Book book) {
+    public String saveBook(@ModelAttribute Book book,@RequestParam("file") MultipartFile file) {
+        String filename = photoUploadService.getFileName(file);
+        book.image_name = filename;
         bookService.saveBook(book);
         return "redirect:/admin/books";
     }
@@ -143,10 +148,13 @@ public class BookController {
             model.addAttribute("pageNumbers", pageNumbers);
         }
         Float rating = ratingService.get_rating(book_id);
+        String filename = book.image_name;
+        String link = photoUploadService.getImageLink(filename);
         if (rating == -1){model.addAttribute("rating", "Рейтинг не сформирован");}
         else{model.addAttribute("rating", rating);}
         Integer user_rated = ratingService.UserRated(book_id, userService.get_current_user_id());
         model.addAttribute("userRated", user_rated);
+        model.addAttribute("link", link);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("book", bookNcomments);
         model.addAttribute("commentPage", commentPage);

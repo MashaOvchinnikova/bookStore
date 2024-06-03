@@ -46,6 +46,9 @@
 <div class="container my-5 col-md-6">
     <div class="card">
         <h5 class="card-header" th:text="${book.book.name}"></h5>
+        <div class="list-group-item" >
+            <img alt="" th:src="${link}">
+        </div>
         <td th:switch="${userRated}">
             <p>Ваша оценка: </p>
             <span th:case="'-1'">

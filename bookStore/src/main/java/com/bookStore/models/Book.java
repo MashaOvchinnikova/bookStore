@@ -22,6 +22,7 @@ public class Book {
     private String description;
 
     public Float rating;
+    public String image_name;
 
     /*Вот это заготовочка для реализации добавления книг в избранное юзером
     * подумала, что тут связь many-to-many, возможно не права и можно как-то по-другому сделать*/
