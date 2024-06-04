@@ -16,7 +16,6 @@ public class CommentService {
     private final CommentRepository commentRepository;
     @Autowired
     public CommentService(CommentRepository commentRepository){
-
         this.commentRepository = commentRepository;
     }
 
@@ -47,5 +46,11 @@ public class CommentService {
 
     public List<Comment> getLatestComments(){
         return commentRepository.findFirst5ByOrderByDateDesc();
+    }
+
+    public Integer userCommented(Long book_id, String username){
+        String user = username;
+        Long book = book_id;
+        return commentRepository.countComment(book_id, username);
     }
 }

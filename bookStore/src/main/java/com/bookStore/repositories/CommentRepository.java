@@ -24,5 +24,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query("SELECT e FROM Comment e WHERE e.book_id = %:book_id%")
     Page<Comment> findAllByBookContaining(@Param("book_id") Long book_id, Pageable pageable);
 
+    @Query("SELECT COUNT(e) FROM Comment e WHERE e.book_id=%:book_id% and e.username=%:username%" )
+    Integer countComment(@Param("book_id") Long book_id, @Param("username") String username);
+
     List<Comment> findFirst5ByOrderByDateDesc();
 }

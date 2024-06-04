@@ -147,13 +147,14 @@ public class BookController {
             List<Integer> pageNumbers = pageNumbersHandler.getPageNumbers(totalPages);
             model.addAttribute("pageNumbers", pageNumbers);
         }
-        Float rating = ratingService.get_rating(book_id);
+        Integer user_rated = ratingService.UserRated(book_id, userService.get_current_user_id());
         String filename = book.image_name;
         String link = photoUploadService.getImageLink(filename);
-        if (rating == -1){model.addAttribute("rating", "Рейтинг не сформирован");}
-        else{model.addAttribute("rating", rating);}
-        Integer user_rated = ratingService.UserRated(book_id, userService.get_current_user_id());
+        Integer userCommented = commentService.userCommented(book_id, userService.get_current_user());
+        if (book.rating == -1){model.addAttribute("rating", "Рейтинг не сформирован");}
+        else{model.addAttribute("rating", book.rating);}
         model.addAttribute("userRated", user_rated);
+        model.addAttribute("userCommented", userCommented);
         model.addAttribute("link", link);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("book", bookNcomments);
