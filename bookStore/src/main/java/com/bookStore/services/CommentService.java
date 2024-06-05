@@ -44,6 +44,10 @@ public class CommentService {
         return pageComments;
     }
 
+    public Integer getBookCommentsCount(Long book_id){
+        return commentRepository.countAllBookComment(book_id);
+    }
+
     public void delete_comment_by_id(Long id){
         commentRepository.deleteById(id);
     }

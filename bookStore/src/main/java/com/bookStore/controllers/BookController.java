@@ -142,26 +142,28 @@ public class BookController {
         Book book = bookService.get_book_by_id(book_id);
         Page<Comment> commentPage = commentService.get_book_comments(book, page, size);
         Integer user_rated = ratingService.UserRated(book_id, userService.get_current_user_id());
+        Integer ratingCount = ratingService.getRatingCount(book_id);
         String filename = book.image_name;
         String link = photoUploadService.getImageLink(filename);
         User user = userService.getUser(userService.get_current_user());
         Integer userCommented = commentService.userCommented(user, book);
+        Integer commentsCount = commentService.getBookCommentsCount(book_id);
         int totalPages = commentPage.getTotalPages();
         if (totalPages > 0) {
             List<Integer> pageNumbers = pageNumbersHandler.getPageNumbers(totalPages);
             model.addAttribute("pageNumbers", pageNumbers);
         }
 
-        if (book.rating == -1){model.addAttribute("rating", "Рейтинг не сформирован");}
+        if (book.rating == -1){model.addAttribute("rating", "0");}
         else{model.addAttribute("rating", book.rating);}
         model.addAttribute("userRated", user_rated);
+        model.addAttribute("ratingCount", ratingCount);
         model.addAttribute("userCommented", userCommented);
+        model.addAttribute("commentsCount", commentsCount);
         model.addAttribute("link", link);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("book", book);
         model.addAttribute("commentPage", commentPage);
         return "bookView";
     }
-
-    /*Нужно еще добавить контроллер для редактирования книг*/
 }

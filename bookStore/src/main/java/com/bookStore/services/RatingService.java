@@ -52,4 +52,8 @@ public class RatingService {
         }
         return rate;
     }
+
+    public Integer getRatingCount(Long book_id){
+        return ratingRepository.getCount(book_id);
+    }
 }
