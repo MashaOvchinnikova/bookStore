@@ -9,52 +9,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 
 @Component
-public class UserService implements UserDetailsService
+public class UserService
 {
     @Autowired
     private UserRepository userRepository;
 
-    //ВНИМАНИЕ КОСТЫЛЬ!!!
-    /*ОБЯЗАТЕЛЬНО один раз раскомментить эти строки, ОДИН раз запустить, и потом закомментить
-    * это нужно, чтобы можно было зайти в учетку с ролью админа
-    * этот код при каждом запуске создает одну и ту же запись, и postgres выдает ошибку
-    * при повторном входе из-за нескольких одинаковых записей в таблице*/
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @PostConstruct
     private void postConstruct() {
-        User admin = new User("admin", "admin");
-        admin.setRoles(Collections.singleton(Role.ADMIN));
-        admin.setActive(true);
-        userRepository.save(admin);
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User myUser = userRepository.findByUsername(username);
-        return new org.springframework.security.core.userdetails.User(myUser.getUsername(),
-                myUser.getPassword(), mapRolesToAuthorities(myUser.getRoles()));
-
-    }
-
-    private List<? extends GrantedAuthority> mapRolesToAuthorities(Set<Role> roles)
-    {
-        return roles.stream().map(r -> new SimpleGrantedAuthority("ROLE_" + r.name()))
-                .collect(Collectors.toList());
+        User adminFromDb = userRepository.findByUsername("admin");
+        if (adminFromDb == null){
+            User admin = new User("admin", "admin");
+            admin.setPassword(passwordEncoder.encode(admin.getPassword()));
+            admin.setRoles(Collections.singleton(Role.ADMIN));
+            admin.setActive(true);
+            userRepository.save(admin);
+        }
     }
 
     public Page<User> getUsers(int page, int size){
@@ -70,6 +51,7 @@ public class UserService implements UserDetailsService
         {
             throw new Exception("user exist");
         }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(Collections.singleton(Role.USER));
         user.setActive(true);
         userRepository.save(user);
