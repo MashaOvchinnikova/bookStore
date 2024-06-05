@@ -2,7 +2,7 @@ package com.bookStore.models;
 
 import jakarta.persistence.*;
 
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -30,6 +30,10 @@ public class Book {
             mappedBy = "addedBooks")
     private Set<User> additions;
 
+    @OneToMany(mappedBy = "book",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
+    public List<Comment> comments;
     public Book(String name, String author, String description) {
         this.author = author;
         this.name = name;

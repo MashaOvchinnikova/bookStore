@@ -1,4 +1,5 @@
 package com.bookStore.models;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -11,18 +12,22 @@ public class Comment {
     public Long id;
     @Column(columnDefinition="TEXT")
     public String comment_text;
+    public Date date = new Date();
 
-    public String username;
-    public Long book_id;
-    public String bookName;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name="book_id",  referencedColumnName="id", nullable = false)
+    @JsonIgnore
+    public Book book;
 
-    public Date date;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name="user_id", referencedColumnName="id", nullable = false)
+    @JsonIgnore
+    public User user;
 
-    public Comment( String comment_text, String username, Long book_id, String bookName, Date date) {
+    public Comment( String comment_text, User user, Book book, Date date) {
         this.comment_text = comment_text;
-        this.username = username;
-        this.book_id = book_id;
-        this.bookName = bookName;
+        this.book = book;
+        this.user = user;
         this.date = date;
     }
 

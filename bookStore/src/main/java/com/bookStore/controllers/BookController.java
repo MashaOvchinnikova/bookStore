@@ -3,6 +3,7 @@ package com.bookStore.controllers;
 import com.bookStore.models.Book;
 import com.bookStore.models.BookComment;
 import com.bookStore.models.Comment;
+import com.bookStore.models.User;
 import com.bookStore.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -139,25 +140,25 @@ public class BookController {
                             @RequestParam(defaultValue = "1") int page,
                             @RequestParam(defaultValue = "2") int size){
         Book book = bookService.get_book_by_id(book_id);
-        Page<Comment> commentPage = commentService.get_book_comments(book_id, page, size);
-        List<Comment> comments = commentPage.getContent();
-        BookComment bookNcomments = new BookComment(book, comments);
+        Page<Comment> commentPage = commentService.get_book_comments(book, page, size);
+        Integer user_rated = ratingService.UserRated(book_id, userService.get_current_user_id());
+        String filename = book.image_name;
+        String link = photoUploadService.getImageLink(filename);
+        User user = userService.getUser(userService.get_current_user());
+        Integer userCommented = commentService.userCommented(user, book);
         int totalPages = commentPage.getTotalPages();
         if (totalPages > 0) {
             List<Integer> pageNumbers = pageNumbersHandler.getPageNumbers(totalPages);
             model.addAttribute("pageNumbers", pageNumbers);
         }
-        Integer user_rated = ratingService.UserRated(book_id, userService.get_current_user_id());
-        String filename = book.image_name;
-        String link = photoUploadService.getImageLink(filename);
-        Integer userCommented = commentService.userCommented(book_id, userService.get_current_user());
+
         if (book.rating == -1){model.addAttribute("rating", "Рейтинг не сформирован");}
         else{model.addAttribute("rating", book.rating);}
         model.addAttribute("userRated", user_rated);
         model.addAttribute("userCommented", userCommented);
         model.addAttribute("link", link);
         model.addAttribute("totalPages", totalPages);
-        model.addAttribute("book", bookNcomments);
+        model.addAttribute("book", book);
         model.addAttribute("commentPage", commentPage);
         return "bookView";
     }
