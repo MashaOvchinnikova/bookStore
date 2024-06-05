@@ -16,13 +16,16 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 /*    @Query("SELECT e FROM Comment e WHERE e.username LIKE %:username%")
     List<Comment> findAllByUsernameContaining(@Param("username") String username);*/
-    @Query("SELECT e FROM Comment e WHERE e.username LIKE %:username%")
-    Page<Comment> findAllByUsernameContaining(@Param("username") String username, Pageable pageable);
+    @Query("SELECT e FROM Comment e WHERE e.user.id = %:user_id%")
+    Page<Comment> findAllByUsernameContaining(@Param("user_id") Long user_id, Pageable pageable);
 
     /*@Query("SELECT e FROM Comment e WHERE e.book_id = %:book_id%")
     List<Comment> findAllByBookContaining(@Param("book_id") Long book_id);*/
-    @Query("SELECT e FROM Comment e WHERE e.book_id = %:book_id%")
+    @Query("SELECT e FROM Comment e WHERE e.book.id = %:book_id%")
     Page<Comment> findAllByBookContaining(@Param("book_id") Long book_id, Pageable pageable);
+
+    @Query("SELECT COUNT(e) FROM Comment e WHERE e.book.id=%:book_id% and e.user.id=%:user_id%" )
+    Integer countComment(@Param("book_id") Long book_id, @Param("user_id") Long user_id);
 
     List<Comment> findFirst5ByOrderByDateDesc();
 }

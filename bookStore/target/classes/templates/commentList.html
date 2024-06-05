@@ -55,7 +55,7 @@
 
         <tbody>
         <tr th:each="c :${comments}">
-            <td th:text="${c.bookName}"></td>
+            <td th:text="${c.book.name}"></td>
             <td th:text="${c.comment_text}"></td>
             <td th:text="${c.date}"></td>
             <td><a class="btn btn-danger btn-sm" th:href="@{/user/comments/{id}(id=${c.id})}">Удалить</a></td>

@@ -3,7 +3,7 @@ package com.bookStore.models;
 
 import jakarta.persistence.*;
 
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -29,6 +29,11 @@ public class User {
             inverseJoinColumns = @JoinColumn(name="book_id", referencedColumnName="id")
     )
     private Set<Book> addedBooks;
+
+    @OneToMany(mappedBy = "user",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
+    public List<Comment> comments;
 
     public User() {
     }

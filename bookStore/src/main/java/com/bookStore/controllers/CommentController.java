@@ -2,6 +2,7 @@ package com.bookStore.controllers;
 
 import com.bookStore.models.Book;
 import com.bookStore.models.Comment;
+import com.bookStore.models.User;
 import com.bookStore.services.BookService;
 import com.bookStore.services.CommentService;
 import com.bookStore.services.PageNumbersHandler;
@@ -31,32 +32,12 @@ public class CommentController {
         this.bookService = bookService;
     }
 
-
-//    @GetMapping("/user/comments")
-//    public ModelAndView getFavoriteBooksAuthorized()
-//    {
-//        /*
-//        List<Comment> comments= commentService.get_comments_by_user();
-//        return new ModelAndView("commentList", "comments", comments);
-//    */
-//    }
-//
-//    @GetMapping("/user/book/{id}")
-//    public ModelAndView add_comment(){
-//
-//    }
-
-//    @GetMapping("/user/comments")
-//    public ModelAndView get_user_test(){
-//        String username=userService.get_current_user();
-//        return new ModelAndView("user_test", "user", username);
-//    }
-
     @PostMapping("/user/book/comment_add/{id}")
     public String add_comment(@PathVariable Long id, String comment_text){
         String username = userService.get_current_user();
-        String bookName = bookService.get_book_by_id(id).getName();
-        commentService.saveComment(comment_text, username, id, bookName);
+        User user = userService.getUser(username);
+        Book book = bookService.get_book_by_id(id);
+        commentService.saveComment(comment_text, user, book);
         return "redirect:/user/comments";
     }
 
@@ -68,8 +49,8 @@ public class CommentController {
     @GetMapping("/user/comments")
     public String get_user_comments(Model model, @RequestParam(defaultValue = "1") int page,
                                           @RequestParam(defaultValue = "1") int size){
-        String username = userService.get_current_user();
-        Page<Comment> commentPage = commentService.get_user_comments(username, page, size);
+        User user = userService.getUser(userService.get_current_user());
+        Page<Comment> commentPage = commentService.get_user_comments(user, page, size);
         List<Comment> comments = commentPage.getContent();
         int totalPages = commentPage.getTotalPages();
         if (totalPages > 0) {

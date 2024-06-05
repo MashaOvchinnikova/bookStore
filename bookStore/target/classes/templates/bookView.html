@@ -45,11 +45,14 @@
 
 <div class="container my-5 col-md-6">
     <div class="card">
-        <h5 class="card-header" th:text="${book.book.name}"></h5>
+        <h5 class="card-header" th:text="${book.name}"></h5>
+        <div class="list-group-item" >
+            <img alt="" th:src="${link}">
+        </div>
         <td th:switch="${userRated}">
             <p>Ваша оценка: </p>
             <span th:case="'-1'">
-                <form class="col-md-4 offset-md-4" th:action="@{/user/book/rate/{book_id}(book_id=${book.book.id})}" method="post">
+                <form class="col-md-4 offset-md-4" th:action="@{/user/book/rate/{book_id}(book_id=${book.id})}" method="post">
                 <select class="form-control selectpicker" name="rate" id="rate" aria-describedby="genreHelp" >
                 <option value="">Ничего не выбрано</option>
                 <option th:each="i : ${#numbers.sequence(1, 5)}" th:value="${i}" th:text="${i}">
@@ -62,9 +65,9 @@
         </td>
         <div class="card-body">
             <ul class="list-group list-group-flush">
-                <li class="list-group-item" th:text="${book.book.author}"></li>
-                <li class="list-group-item" th:text="${book.book.genre.toLabel()}"></li>
-                <li class="list-group-item" th:text="${book.book.description}"></li>
+                <li class="list-group-item" th:text="${book.author}"></li>
+                <li class="list-group-item" th:text="${book.genre.toLabel()}"></li>
+                <li class="list-group-item" th:text="${book.description}"></li>
                 <p>Рейтинг книги: <li class="list-group-item" th:text="${rating}">Рейтинг</li></p>
             </ul>
         </div>
@@ -73,8 +76,13 @@
 
 
 <div class="container text-center">
-    <a class="btn btn-primary" th:href="@{/user/book/comment/{id}(id=${book.book.id})}">Оставить отзыв</a>
-</div>
+    <td th:switch="${userCommented}">
+        <span th:case="'0'">
+            <a class="btn btn-primary" th:href="@{/user/book/comment/{id}(id=${book.id})}">Оставить отзыв</a>
+        </span>
+        <span th:case="*"></span>
+    </td>
+    </div>
 
 <div class="container my-5 col-md-6">
     <h3>Отзывы</h3>
@@ -84,8 +92,9 @@
 <div class="container my-5 col-md-6" th:each="c :${book.comments}">
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title" th:text="${c.username}"></h5>
+            <h5 class="card-title" th:text="${c.user.username}"></h5>
             <p class="card-text" th:text="${c.comment_text}"></p>
+            <p class="card-text" th:text="${c.date}"></p>
         </div>
     </div>
 </div>
@@ -93,17 +102,17 @@
 <nav aria-label="Page navigation" th:if="${totalPages > 0}">
     <ul class="pagination justify-content-center">
         <li class="page-item" th:if="${commentPage.hasPrevious()}">
-            <a class="page-link" th:href="@{/user/book/{id}(id=${book.book.id}, size=${commentPage.size}, page=${commentPage.getNumber()})}"
+            <a class="page-link" th:href="@{/user/book/{id}(id=${book.id}, size=${commentPage.size}, page=${commentPage.getNumber()})}"
                tabindex="-1">Предыдущая</a>
         </li>
         <th:block th:each="pageNumber : ${pageNumbers}">
             <li class="page-item" th:class="${pageNumber==commentPage.getNumber() + 1} ? active">
-                <a class="page-link" th:href="@{/user/book/{id}(id=${book.book.id}, size=${commentPage.size}, page=${pageNumber})}"
+                <a class="page-link" th:href="@{/user/book/{id}(id=${book.id}, size=${commentPage.size}, page=${pageNumber})}"
                    th:text="${pageNumber}"></a>
             </li>
         </th:block>
         <li class="page-item" th:if="${commentPage.hasNext()}">
-            <a class="page-link" th:href="@{/user/book/{id}(id=${book.book.id}, size=${commentPage.size}, page=${commentPage.getNumber() +2 })}">
+            <a class="page-link" th:href="@{/user/book/{id}(id=${book.id}, size=${commentPage.size}, page=${commentPage.getNumber() +2 })}">
                 Следующая
             </a>
         </li>

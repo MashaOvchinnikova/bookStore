@@ -35,7 +35,7 @@
 </nav>
 <div class="container my-5 p-5" style="border:1px solid black;">
     <h4 class="text-center">Добавление новой книги</h4>
-    <form class="col-md-4 offset-md-4" th:action="@{/admin/save_book}" method="post">
+    <form class="col-md-4 offset-md-4" th:action="@{/admin/save_book}" method="post" enctype="multipart/form-data">
         <div class="mb-3">
             <label class="form-label">Название
             <input type="text" class="form-control" name="name" aria-describedby="nameHelp">
@@ -65,6 +65,11 @@
             </textarea>
             </label>
             <div id="descriptionHelp" class="form-text">Введите описание книги</div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Постер книги
+                <input type="file" name="file" accept="image/*" class="form-control-file">
+            </label>
         </div>
         <center><button type="submit" class="btn btn-primary">Добавить</button></center>
     </form>

@@ -2,7 +2,7 @@ package com.bookStore.models;
 
 import jakarta.persistence.*;
 
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -21,7 +21,8 @@ public class Book {
     @Column(columnDefinition="TEXT")
     private String description;
 
-    public Float rating;
+    public Float rating = (float)-1;
+    public String image_name;
 
     /*Вот это заготовочка для реализации добавления книг в избранное юзером
     * подумала, что тут связь many-to-many, возможно не права и можно как-то по-другому сделать*/
@@ -29,6 +30,10 @@ public class Book {
             mappedBy = "addedBooks")
     private Set<User> additions;
 
+    @OneToMany(mappedBy = "book",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
+    public List<Comment> comments;
     public Book(String name, String author, String description) {
         this.author = author;
         this.name = name;
