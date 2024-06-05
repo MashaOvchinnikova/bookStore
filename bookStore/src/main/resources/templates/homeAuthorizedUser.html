@@ -54,14 +54,14 @@
     <span>Отзывов пока нет!</span>
 </div>
 
-<div class="container" th:each="c :${latestComments}">
+<div class="container my-5" th:each="c :${latestComments}">
     <div class="row justify-content-around">
         <div class="card col">
             <div class="card-body">
                 <h4 class="card-title" th:text="${c.user.username}"></h4>
                 <h6 class="card-title" th:text="${c.book.name}"></h6>
-                <p class="card-text" th:text="${c.comment_text}"></p>
                 <p class="card-text" th:text="${c.date}"></p>
+                <p class="card-text" th:text="${c.comment_text}"></p>
                 <a class="btn btn-primary" th:href="@{/user/book/{id}(id=${c.book.id})}">Перейти к описанию</a>
             </div>
         </div>

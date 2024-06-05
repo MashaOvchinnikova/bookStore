@@ -44,7 +44,7 @@ public class BookController {
 
     @GetMapping("/books")
     public String getBooks(Model model, @RequestParam(defaultValue = "1") int page,
-                                 @RequestParam(defaultValue = "2") int size) {
+                                 @RequestParam(defaultValue = "5") int size) {
         Page<Book> bookPage = bookService.getBooks(page,size);
         List<Book> books = bookPage.getContent();
         int totalPages = bookPage.getTotalPages();
@@ -70,7 +70,7 @@ public class BookController {
 
     @GetMapping("/user/books")
     public String getBooksAuthorized(Model model, @RequestParam(defaultValue = "1") int page,
-                                           @RequestParam(defaultValue = "2") int size) {
+                                           @RequestParam(defaultValue = "5") int size) {
         Page<Book> pageBooks = bookService.getBooks(page,size);
         List<Book> books = pageBooks.getContent();
         int totalPages = pageBooks.getTotalPages();
@@ -88,7 +88,7 @@ public class BookController {
     //Эндпоинты для зареганных пользователей с ролью ADMIN
     @GetMapping("/admin/books")
     public String getBooksAdmin(Model model, @RequestParam(defaultValue = "1") int page,
-                                      @RequestParam(defaultValue = "2") int size) {
+                                      @RequestParam(defaultValue = "5") int size) {
         Page<Book> pageBook = bookService.getBooks(page,size);
         List<Book> books = pageBook.getContent();
         int totalPages = pageBook.getTotalPages();
@@ -138,7 +138,7 @@ public class BookController {
     public String view_book(Model model,
                             @PathVariable Long book_id,
                             @RequestParam(defaultValue = "1") int page,
-                            @RequestParam(defaultValue = "2") int size){
+                            @RequestParam(defaultValue = "3") int size){
         Book book = bookService.get_book_by_id(book_id);
         Page<Comment> commentPage = commentService.get_book_comments(book, page, size);
         Integer user_rated = ratingService.UserRated(book_id, userService.get_current_user_id());

@@ -52,7 +52,7 @@
             <td th:text="${b.name}"></td>
             <td th:text="${b.author}"></td>
             <td th:text="${b.genre.toLabel()}"></td>
-            <td th:text="${b.getFirstNChars(100)} + ..."></td>
+            <td th:text="${b.getFirstNChars(50)} + ..."></td>
         </tr>
         </tbody>
     </table>

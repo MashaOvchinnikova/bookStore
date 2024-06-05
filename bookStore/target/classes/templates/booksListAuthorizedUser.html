@@ -61,7 +61,7 @@
                 <td th:text="${b.name}"></td>
                 <td th:text="${b.author}"></td>
                 <td th:text="${b.genre.toLabel()}"></td>
-                <td th:text="${b.getFirstNChars(100)} + ..."></td>
+                <td th:text="${b.getFirstNChars(50)} + ..."></td>
                 <td><a class="btn btn-info btn-sm" th:href="@{/user/book/{id}(id=${b.id})}">Просмотреть детали</a></td>
                 <td><a class="btn btn-success btn-sm" th:href="@{/user/add_to_favorite/{id}(id=${b.id})}">Добавить в избранное</a></td>
             </tr>
