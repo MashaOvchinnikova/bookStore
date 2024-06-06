@@ -129,13 +129,17 @@ public class BookController {
     @GetMapping("/admin/books/edit/{id}")
     public String editBook(Model model, @PathVariable("id") Long book_id){
         String name = bookService.get_book_by_id(book_id).getName();
+        Book book = bookService.get_book_by_id(book_id);
+        model.addAttribute("book", book);
         model.addAttribute("name", name);
         model.addAttribute("book_id", book_id);
         return "bookEditing";
     }
 
     @PostMapping("/admin/save_changes/{id}")
-    public String savingChanges(@ModelAttribute Book book, @PathVariable("id") Long id){
+    public String savingChanges(@ModelAttribute Book book, @RequestParam("file") MultipartFile file, @PathVariable("id") Long id){
+        String filename = photoUploadService.getFileName(file);
+        book.image_name = filename;
         bookService.updateBook(book);
         return "redirect:/admin/books";
     }
