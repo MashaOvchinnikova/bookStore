@@ -1,9 +1,6 @@
 package com.bookStore.controllers;
 
-import com.bookStore.models.Book;
-import com.bookStore.models.BookComment;
-import com.bookStore.models.Comment;
-import com.bookStore.models.User;
+import com.bookStore.models.*;
 import com.bookStore.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -73,13 +71,20 @@ public class BookController {
                                            @RequestParam(defaultValue = "5") int size) {
         Page<Book> pageBooks = bookService.getBooks(page,size);
         List<Book> books = pageBooks.getContent();
+        List<BookCover> bookCovers = new ArrayList<>();
+        for(Book book: books){
+            String image_link = photoUploadService.getImageLink(book.image_name);
+            Integer ratingCount = ratingService.getRatingCount(book.getId());
+            bookCovers.add(new BookCover(
+                    book,image_link, ratingCount));
+        }
         int totalPages = pageBooks.getTotalPages();
         if (totalPages > 0) {
             List<Integer> pageNumbers = pageNumbersHandler.getPageNumbers(totalPages);
             model.addAttribute("pageNumbers", pageNumbers);
         }
         model.addAttribute("totalPages", totalPages);
-        model.addAttribute("books", books);
+        model.addAttribute("books", bookCovers);
         model.addAttribute("bookPage", pageBooks);
         return "booksListAuthorizedUser";
     }
@@ -154,8 +159,7 @@ public class BookController {
             model.addAttribute("pageNumbers", pageNumbers);
         }
 
-        if (book.rating == -1){model.addAttribute("rating", "0");}
-        else{model.addAttribute("rating", book.rating);}
+        model.addAttribute("rating", book.rating);
         model.addAttribute("userRated", user_rated);
         model.addAttribute("ratingCount", ratingCount);
         model.addAttribute("userCommented", userCommented);

@@ -21,7 +21,7 @@ public class Book {
     @Column(columnDefinition="TEXT")
     private String description;
 
-    public Float rating = (float)-1;
+    public Float rating = (float) 0;
     public String image_name;
 
     /*Вот это заготовочка для реализации добавления книг в избранное юзером
