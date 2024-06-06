@@ -35,13 +35,16 @@
 </nav>
 <div class="container my-5 p-5" style="border:1px solid black;">
     <h4 class="text-center">Изменение книги</h4>
-    <form class="col-md-4 offset-md-4" th:action="@{/admin/save_changes/{id}(id=${book_id})}" method="post">
+    <form class="col-md-4 offset-md-4" th:action="@{/admin/save_changes/{id}(id=${book_id})}" method="post" enctype="multipart/form-data">
         <div class="mb-3">
-            <h3 id="nameHelp" class="form-text" th:text="${name}"></h3>
+            <label class="form-label">Название
+                <input type="text" class="form-control" name="name" aria-describedby="nameHelp" th:value="${book.name}">
+            </label>
+            <div id="nameHelp" class="form-text">Введите название книги</div>
         </div>
         <div class="mb-3">
             <label class="form-label">Автор
-                <input type="text" class="form-control" name="author" aria-describedby="authorHelp">
+                <input type="text" class="form-control" name="author" aria-describedby="authorHelp" th:value="${book.author}">
             </label>
             <div id="authorHelp" class="form-text">Введите автора книги</div>
         </div>
@@ -58,12 +61,17 @@
         </div>
         <div class="mb-3">
             <label class="form-label">Описание
-                <textarea class="form-control" name="description" aria-describedby="descriptionHelp" cols="100" rows="10">
+                <textarea class="form-control" name="description" aria-describedby="descriptionHelp" cols="100" rows="10" th:text="${book.description}">
             </textarea>
             </label>
             <div id="descriptionHelp" class="form-text">Введите описание книги</div>
         </div>
-        <center><button type="submit" class="btn btn-primary">Подтвердить</button></center>
+        <div class="mb-3">
+            <label class="form-label">Постер книги
+                <input type="file" name="file" accept="image/*" class="form-control-file">
+            </label>
+        </div>
+        <center><button type="submit" class="btn btn-primary">Добавить</button></center>
     </form>
 </div>
 

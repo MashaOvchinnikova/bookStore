@@ -48,7 +48,7 @@ public class CommentController {
 
     @GetMapping("/user/comments")
     public String get_user_comments(Model model, @RequestParam(defaultValue = "1") int page,
-                                          @RequestParam(defaultValue = "1") int size){
+                                          @RequestParam(defaultValue = "10") int size){
         User user = userService.getUser(userService.get_current_user());
         Page<Comment> commentPage = commentService.get_user_comments(user, page, size);
         List<Comment> comments = commentPage.getContent();
